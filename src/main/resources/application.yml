@@ -1,0 +1,136 @@
+# 公共配置文件
+# 
+# 
+spring:
+  application:
+    name: yubi-backend-dupli
+  # 默认 dev 环境
+  profiles:
+    active: dev
+  # 支持 swagger3
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  # session 配置
+  session:
+    # todo 取消注释开启分布式 session（须先配置 Redis）
+    store-type: redis
+    # 30 天过期
+    timeout: 2592000
+  # 数据库配置
+  # todo 需替换配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/yubi
+    username: root
+    password: 123
+  # Redis 配置
+  # todo 需替换配置，然后取消注释
+  redis:
+    database: 4
+    host: localhost
+    port: 6379
+  rabbitmq:
+    host: localhost
+    port: 5672
+    password: guest
+    username: guest
+    message-converter: org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
+    template:
+      retry:
+        enabled: true         # 超时重连，会阻塞
+    connection-timeout: 1s   # 失联多久开始重连
+    publisher-confirm-type: correlated  # 开启 publisher confirm 机制 （消息是否到达Exchange）
+    publisher-returns: true   # 开启  publisher returns 机制 （消息未到达队列）
+
+    listener:
+      simple:
+        acknowledge-mode: auto  # consumer执行成功就返回ack给mq，否则返回nack。
+        retry:
+          enabled: true
+          stateless: true # 重试是否是无状态的。false，即消费者的处理需要跟踪重试次数或依赖之前的处理状态。
+          # 如果在重试回调中（即在执行具体重试逻辑时）才开始事务，那么 stateless 重试是适合的。stateless=true
+          # 如果事务已经在重试回调之外启动（例如在更高层启动），并且必须在重试期间保持事务的一致性。stateless=false
+          max-attempts: 3
+
+        default-requeue-rejected: true  # 默认的被拒绝后是否重回队列
+        prefetch: 1
+
+  #    timeout: 5000
+#    password: 123456
+  # Elasticsearch 配置
+  # todo 需替换配置，然后取消注释
+#  elasticsearch:
+#    uris: http://localhost:9200
+#    username: root
+#    password: 123456
+  # 文件上传
+  servlet:
+    multipart:
+      # 大小限制
+      max-file-size: 10MB
+server:
+  address: 0.0.0.0
+  port: 8080
+  servlet:
+    context-path: /api
+    # cookie 30 天过期
+    session:
+      cookie:
+        max-age: 2592000
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: ''
+#    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler # Enum和数据库字段的映射
+  global-config:
+    enable-sql-runner: true  # 支持sqlRunner
+    db-config:
+      logic-delete-field: isDelete # 全局逻辑删除的实体字段名
+      logic-delete-value: 1 # 逻辑已删除值（默认为 1）
+      logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
+# 微信相关
+wx:
+  # 微信公众平台
+  # todo 需替换配置
+  mp:
+    token: xxx
+    aesKey: xxx
+    appId: xxx
+    secret: xxx
+    config-storage:
+      http-client-type: HttpClient
+      key-prefix: wx
+      redis:
+        host: 127.0.0.1
+        port: 6379
+      type: Memory
+  # 微信开放平台
+  # todo 需替换配置
+  open:
+    appId: xxx
+    appSecret: xxx
+# 对象存储
+# todo 需替换配置
+cos:
+  client:
+    accessKey: xxx
+    secretKey: xxx
+    region: xxx
+    bucket: xxx
+# 接口文档配置，在配置文件里写，就不用自己写Bean啦
+knife4j:
+  enable: true
+  openapi:
+    title: "接口文档"
+    version: 1.0
+    group:
+      default:
+        api-rule: package
+        api-rule-resources:
+          - com.yupi.springbootinit.controller
+yuapi:
+  client:
+    access-key: p84tjelv0bftm9dktpq2ga7iqzg1z69n
+    secret-key: 8xz4oczhqdur7y1kc2ps6hsykconnnhg

@@ -1,0 +1,36 @@
+# 线上配置文件
+# 
+# 
+
+spring:
+  # 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://42.194.158.197:3306/yubi
+    username: yubi
+    password: 12345678
+  # Redis 配置
+  # todo 需替换配置j
+  redis:
+    database: 3
+    host: 42.194.158.197
+    password: 12345678
+  rabbitmq:
+    host: 42.194.158.197
+server:
+  port: 8101
+  # Elasticsearch 配置
+  # todo 需替换配置
+#  elasticsearch:
+#    uris: http://localhost:9200
+#    username: root
+#    password: 123456
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+# 接口文档配置
+knife4j:
+  basic:
+    enable: true
+    username: root
+    password: 123456
